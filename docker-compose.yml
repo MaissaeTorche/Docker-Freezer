@@ -1,0 +1,77 @@
+services:
+  mariadb:
+    container_name: "mariadb_docker"
+    build: 
+      context: .
+      dockerfile: "mariadb"
+    networks:
+      - "freezer_network"
+    ports :
+      - "3306:3306"
+    
+  server:
+    container_name: "server_docker"
+    build:
+      context: .
+      dockerfile: "server"
+    networks:
+      - "freezer_network"
+  
+  proftpd:
+    container_name: "proftpd_docker"
+    build:
+      context: .
+      dockerfile: "proftpd"
+
+  jenkins:
+    container_name: "jenkins_docker"
+    build: .
+    image: "jenkins/jenkins:lts-jdk11"
+    ports:
+      - "8090:8080"
+      - "50000:50000"
+    volumes:
+      - "./jenkins_vol:/var/jenkins_home"
+    networks:
+      - "freezer_network"
+    depends_on:
+      - "jenkins_agent"
+
+  jenkins_agent:
+    container_name: "agent_docker"
+    build:
+      context: .
+      dockerfile: "agent"
+    image: "myagent"
+    ports:
+      - "22:22"
+    networks:
+      - "freezer_network"
+
+  gitlab:
+    container_name: "gitlab_docker"
+    build: .
+    image: "gitlab/gitlab-ee"
+    ports:
+      - "81:81"
+    networks:
+      - "freezer_network"
+    depends_on:
+     - "jenkins_agent" 
+
+  nginx:
+    build:
+      context: .
+      dockerfile: "nginx" 
+    container_name: "nginx_docker"
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - "mariadb"
+    networks:  
+       - "freezer_network"
+
+networks:
+  freezer_network:
+    driver: "bridge"

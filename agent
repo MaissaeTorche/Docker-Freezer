@@ -1,0 +1,16 @@
+FROM archlinux
+
+RUN pacman -Sy
+RUN pacman -S jdk11-openjdk --noconfirm
+RUN pacman -S openssh --noconfirm 
+RUN pacman -S maven --noconfirm
+RUN pacman -S git --noconfirm
+RUN useradd -m jenkins
+
+RUN mkdir -p /home/jenkins/.ssh
+RUN ssh-keygen -A
+COPY Jenkins-rsa.pub /home/jenkins/.ssh/authorized_keys
+RUN chown jenkins: /home/jenkins -R
+RUN pacman -S git --noconfirm
+RUN pacman -S maven --noconfirm
+CMD /usr/sbin/sshd -D
