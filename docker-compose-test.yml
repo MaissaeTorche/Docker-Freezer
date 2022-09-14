@@ -11,7 +11,7 @@ services:
     volumes:
       - "./jenkins_vol:/var/jenkins_home:w"
     networks:
-      reezer_network:
+      freezer_network:
         ipv4_address: 192.168.0.2
 
   jenkins_agent:
