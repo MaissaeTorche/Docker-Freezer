@@ -22,7 +22,7 @@ services:
       dockerfile: "agent"
     image: "myagent"
     ports:
-      - "22:22"
+      - "21:22"
     networks:
       freezer_network:
         ipv4_address: 192.168.0.3
@@ -31,7 +31,7 @@ services:
     container_name: "gitlab_docker"
     image: "gitlab/gitlab-ee"
     ports:
-      - 81:80
+      - "81:80"
     networks:
       freezer_network:
         ipv4_address: 192.168.0.4
