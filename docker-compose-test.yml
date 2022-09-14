@@ -1,0 +1,58 @@
+version: '2.1'
+
+services:
+    
+  jenkins:
+    container_name: "jenkins_docker"
+    image: "jenkins/jenkins"
+
+    ports:
+      - "8090:8080"
+      - "50000:50000"
+    volumes:
+      - "./jenkins_vol:/var/jenkins_home"
+    networks:
+      freezer_network:
+        ipv4_address: 192.168.0.2
+
+  jenkins_agent:
+    container_name: "agent_docker"
+    build:
+      context: .
+      dockerfile: "agent"
+    image: "myagent"
+    ports:
+      - "22:22"
+    networks:
+      freezer_network:
+        ipv4_address: 192.168.0.3
+
+  gitlab:
+    container_name: "gitlab_docker"
+    image: "gitlab/gitlab-ee"
+    ports:
+      - 81:80
+    networks:
+      freezer_network:
+        ipv4_address: 192.168.0.4
+
+  nginx:
+    build:
+      context: .
+      dockerfile: "nginx" 
+    container_name: "nginx_docker"
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:  
+      freezer_network:
+        ipv4_address: 192.168.0.5
+
+networks:
+  freezer_network:
+    driver: "bridge"
+    ipam:
+      driver: "default"
+      config:
+        - subnet: "192.168.0.0/24"
+          gateway: "192.168.0.1"
