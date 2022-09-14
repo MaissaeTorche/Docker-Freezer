@@ -9,7 +9,7 @@ services:
       - "8090:8080"
       - "50000:50000"
     volumes:
-      - "./jenkins_vol:/var/jenkins_home:w"
+      - "./jenkins_vol:/var/jenkins_home"
     networks:
       freezer_network:
         ipv4_address: 192.168.0.2
