@@ -4,8 +4,7 @@ services:
     
   jenkins:
     container_name: "jenkins_docker"
-    image: "jenkins/jenkins"
-
+    image: "jenkins/jenkins:lts-jdk11"
     ports:
       - "8090:8080"
       - "50000:50000"
